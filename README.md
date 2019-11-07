@@ -1,24 +1,39 @@
-# MDR_Challenge
+One thing I changed is MySQL has a bit of a messy install on this computer so I changed the config files to use
+a SQLite DB called DB.sqlite
+To get the driver to work for it here I had to edit my php.ini file and un comment out the lines related to sqlite. I was using windows with apache but no matter your setup you may need to do this if you havn't already.
+Tested mostly with Postman, in a larger or more complex project writing a suite of unit tests first and then making the endpoings might be the way to go. The endpoints that update or insert a student or department take just form data.
 
-## Once you have completed this challenge upload your code onto github and send the link.
+* Adds a students/departments to database -> accepts json form data, I just used postman to check it would update
+* if you set up my sqlite db you should see my edits. Will only allow you to update name, gender and dept_id
+{
+"name":"test",
+"gender":"m",
+"dept_id":1
+}
+Route::post('students/add_student', 'StudentController@add_student');
+Route::post('departments/add_department', 'DepartmentController@add_department');
 
-### Prerequisites 
-**You will need composer, php, and a mysql installed on your local machine to complete this challenge**
-
-### Set Up
-1. Create a database named laravel in your mysql db.
-2. Clone/Pull down this repository onto your local machine. 
-3. Copy .env.example to .env
-4. Update .env db configurations
-5. Run `composer install` in the project directory.
-6. Run `php artisan migrate` to create database tables.
-7. You may need to run `composer dump-autoload` to regenerate composer's autoloader.
-8. Run `php artisan db:seed` to populate the students and departments table.
-
-# Challenge
-### Create API routes that do the following
-* Returns all students and departments
-* Updates name of student or department by id
-* Adds a students/departments to database
-* Returns all students that belong to a department
 * Returns the number of students that are majoring in each department sorted in descending number of students.
+Route::get('departmentStats', "DepartmentController@stats");
+
+* Returns all students that belong to a department
+Route::get('departments/{id}/students', 'DepartmentController@students');
+
+
+Routes with what challenge part they answer
+
+* Returns all students and departments
+Route::get('departments', function(){
+	return Department::all();
+});
+Route::get('students', function(){
+	return Student::all();
+});
+
+
+* Updates name of student or department by id
+{
+"name":"newname"
+}
+Route::post('students/{id}', 'StudentController@update');
+Route::post('departments/{id}', 'DepartmentController@update');
